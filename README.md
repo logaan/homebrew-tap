@@ -33,33 +33,21 @@ Build the bleeding edge from `main` instead of the latest release with
 
 ## Adding a formula
 
-Drop a `Formula/<name>.rb` into this repo and push. For a Rust project that
-publishes tagged releases, the build-from-source pattern is:
+Drop a `Formula/<name>.rb` into this repo and push.
+[`Formula/wavelet.rb`](Formula/wavelet.rb) is a worked example of the
+**prebuilt-binary** pattern: per-platform `url` + `sha256` under
+`on_macos`/`on_linux` and `on_arm`/`on_intel`, with no `depends_on` so
+installing pulls no build toolchain (and a `head` block that builds from source
+for `--HEAD`).
 
-```ruby
-class Foo < Formula
-  desc "..."
-  homepage "https://github.com/logaan/foo"
-  url "https://github.com/logaan/foo/archive/refs/tags/v1.2.3.tar.gz"
-  sha256 "..." # shasum -a 256 of the tarball above
-  license "MIT"
-  head "https://github.com/logaan/foo.git", branch: "main"
-
-  depends_on "rust" => :build
-
-  def install
-    system "cargo", "install", *std_cargo_args
-  end
-
-  test do
-    assert_match "foo #{version}", shell_output("#{bin}/foo --version")
-  end
-end
-```
+For a project that only ships source, the **build-from-source** pattern is
+smaller — a single `url` to a release tarball, `depends_on "rust" => :build` (or
+whatever toolchain), and a `cargo install`/`make` in `install`. See the Homebrew
+[Formula Cookbook](https://docs.brew.sh/Formula-Cookbook) for templates.
 
 Lint before pushing:
 
 ```console
 brew style logaan/tap
-brew audit --tap logaan/tap --strict --online
+brew audit --tap logaan/tap --strict --online <name>
 ```
