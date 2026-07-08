@@ -1,19 +1,45 @@
 class Lot < Formula
   desc "Manage git-backed lists of anything from the command-line"
   homepage "https://github.com/logaan/lot.rs"
-  # No tagged releases yet, so build from a pinned commit on main. Bump the
-  # revision (and version, when the crate version changes) to update.
-  url "https://github.com/logaan/lot.rs.git",
-      revision: "6de1fb6056425482c2b2f9412b0440296df86580"
   version "0.1.0"
   license "MIT"
-  # Build the latest from main instead of the pinned revision with `--HEAD`.
-  head "https://github.com/logaan/lot.rs.git", branch: "main"
 
-  depends_on "rust" => :build
+  # Build the latest from main (requires a Rust toolchain) with `--HEAD`.
+  head do
+    url "https://github.com/logaan/lot.rs.git", branch: "main"
+    depends_on "rust" => :build
+  end
+
+  # Prebuilt binaries from the GitHub Release -- no Rust toolchain is pulled in.
+  # Bump `version` and the four url/sha256 pairs to point at a newer release.
+  on_macos do
+    on_arm do
+      url "https://github.com/logaan/lot.rs/releases/download/v0.1.0/lot-v0.1.0-aarch64-apple-darwin.tar.gz"
+      sha256 "affe5112518ae4342f5cd3d40c3780ba5b55f0cc1459c263ed6a910ee4216ca1"
+    end
+    on_intel do
+      url "https://github.com/logaan/lot.rs/releases/download/v0.1.0/lot-v0.1.0-x86_64-apple-darwin.tar.gz"
+      sha256 "b3d9d175e2dabe8e9b01011533d0fda7694326a416bf551c2251af1bea2da656"
+    end
+  end
+
+  on_linux do
+    on_arm do
+      url "https://github.com/logaan/lot.rs/releases/download/v0.1.0/lot-v0.1.0-aarch64-unknown-linux-gnu.tar.gz"
+      sha256 "c2499cd91499870b615c3d258a2e8afb389fc8b225353221d1970ef6f6d708cd"
+    end
+    on_intel do
+      url "https://github.com/logaan/lot.rs/releases/download/v0.1.0/lot-v0.1.0-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "0b06ef99e6b4db7a2b093ab09bc55312ae43a77dc6c3d34472530aa436b8e5d3"
+    end
+  end
 
   def install
-    system "cargo", "install", *std_cargo_args(path: "crates/lot-cli")
+    if build.head?
+      system "cargo", "install", *std_cargo_args(path: "crates/lot-cli")
+    else
+      bin.install "lot"
+    end
   end
 
   test do

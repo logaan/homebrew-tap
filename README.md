@@ -34,19 +34,18 @@ Build the bleeding edge from `main` instead of the latest release with
 
 ## Adding a formula
 
-Drop a `Formula/<name>.rb` into this repo and push.
-[`Formula/wavelet.rb`](Formula/wavelet.rb) is a worked example of the
+Drop a `Formula/<name>.rb` into this repo and push. Both
+[`Formula/lot.rb`](Formula/lot.rb) and
+[`Formula/wavelet.rb`](Formula/wavelet.rb) are worked examples of the
 **prebuilt-binary** pattern: per-platform `url` + `sha256` under
 `on_macos`/`on_linux` and `on_arm`/`on_intel`, with no `depends_on` so
-installing pulls no build toolchain (and a `head` block that builds from source
-for `--HEAD`).
+installing pulls no build toolchain, plus a `head` block that builds from source
+for `--HEAD`.
 
 For a project that only ships source, the **build-from-source** pattern is
-smaller — a single `url`, `depends_on "rust" => :build` (or whatever
-toolchain), and a `cargo install`/`make` in `install`.
-[`Formula/lot.rb`](Formula/lot.rb) is a worked example: it has no tagged
-releases, so its `url` pins a `revision` on `main` with an explicit `version`
-(plus a `head` line for `--HEAD`). See the Homebrew
+smaller — a single `url` (a tag tarball, or a git repo pinned to a `revision`
+with an explicit `version`), `depends_on "rust" => :build` (or whatever
+toolchain), and a `cargo install`/`make` in `install`. See the Homebrew
 [Formula Cookbook](https://docs.brew.sh/Formula-Cookbook) for more templates.
 
 Lint before pushing:
