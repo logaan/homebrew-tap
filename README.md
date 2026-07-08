@@ -26,6 +26,7 @@ brew install <formula>
 
 | Formula | Description | Installs |
 | --- | --- | --- |
+| [`lot`](Formula/lot.rb) | Manage git-backed lists of anything from the command-line | `lot` (CLI) |
 | [`wavelet`](Formula/wavelet.rb) | Homoiconic language for the WebAssembly Component Model | `wavelet` (compiler/CLI) and `wavelet-lsp` (language server) |
 
 Build the bleeding edge from `main` instead of the latest release with
@@ -41,9 +42,12 @@ installing pulls no build toolchain (and a `head` block that builds from source
 for `--HEAD`).
 
 For a project that only ships source, the **build-from-source** pattern is
-smaller — a single `url` to a release tarball, `depends_on "rust" => :build` (or
-whatever toolchain), and a `cargo install`/`make` in `install`. See the Homebrew
-[Formula Cookbook](https://docs.brew.sh/Formula-Cookbook) for templates.
+smaller — a single `url`, `depends_on "rust" => :build` (or whatever
+toolchain), and a `cargo install`/`make` in `install`.
+[`Formula/lot.rb`](Formula/lot.rb) is a worked example: it has no tagged
+releases, so its `url` pins a `revision` on `main` with an explicit `version`
+(plus a `head` line for `--HEAD`). See the Homebrew
+[Formula Cookbook](https://docs.brew.sh/Formula-Cookbook) for more templates.
 
 Lint before pushing:
 
